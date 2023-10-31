@@ -1,2 +1,27 @@
-# bot
-bot
+import telebot
+from telebot import types
+
+bot = telebot.TeleBot("6636429532:AAF6ZVEKO8kGdc3hrDBqaXF1nHoNUXUCQX8")
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+    kurs_button = types.InlineKeyboardButton("Dollar kursi", callback_data="dollar")
+    obhavo_button = types.InlineKeyboardButton("Ob Havo", callback_data="obhavo")
+    yaratuvchi_button = types.InlineKeyboardButton("Yaratuvchi", callback_data="yaratuvchi")
+    admin_button = types.InlineKeyboardButton("Admin", callback_data="admin")
+    keyboard.add(kurs_button, obhavo_button, yaratuvchi_button, admin_button)
+    bot.send_message(message.chat.id, "Assalomu alaykum! Botimizga xush kelibsiz.", reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_handler(call):
+    if call.data == "dollar":
+        kurs_link = "https://g.co/kgs/zpnZWh"
+        bot.send_message(call.message.chat.id, f"AQSH dollari – So'm kursi: {kurs_link}")
+    elif call.data == "obhavo":
+        obhavo_link = "obhavo.uz"
+        bot.send_message(call.message.chat.id, f"Ob havo ma'lumotlari uchun: {obhavo_link}")
+    elif call.data in ["yaratuvchi", "admin"]:
+        bot.send_message(call.message.chat.id, "@soyibjonabdumannonov bilan aloqaga chiqishingiz mumkin")
+
+bot.polling()
